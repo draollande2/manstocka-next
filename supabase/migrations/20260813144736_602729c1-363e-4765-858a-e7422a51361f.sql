@@ -1,0 +1,3 @@
+UPDATE auth.users SET email_confirmed_at = COALESCE(email_confirmed_at, now()) WHERE id = '4cccfb5c-4c70-4e6b-8457-66436ed3264f';
+INSERT INTO public.profiles (id, full_name, login_id, email) VALUES ('4cccfb5c-4c70-4e6b-8457-66436ed3264f','OUEDRAOGO Roland B','draollandegm@gmail.com','draollandegm@gmail.com') ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.user_roles (user_id, role) VALUES ('4cccfb5c-4c70-4e6b-8457-66436ed3264f','admin') ON CONFLICT (user_id, role) DO NOTHING;

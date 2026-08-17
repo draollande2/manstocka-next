@@ -10,33 +10,253 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCollaborateursRouteImport } from './routes/_authenticated/collaborateurs'
+import { Route as AuthenticatedComptesRouteImport } from './routes/_authenticated/comptes'
+import { Route as AuthenticatedDepensesRouteImport } from './routes/_authenticated/depenses'
+import { Route as AuthenticatedEpargneRouteImport } from './routes/_authenticated/epargne'
+import { Route as AuthenticatedFacturesRouteImport } from './routes/_authenticated/factures'
+import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
+import { Route as AuthenticatedManquesPertesRouteImport } from './routes/_authenticated/manques-pertes'
+import { Route as AuthenticatedMonEspaceRouteImport } from './routes/_authenticated/mon-espace'
+import { Route as AuthenticatedMouvementsRouteImport } from './routes/_authenticated/mouvements'
+import { Route as AuthenticatedParametresRouteImport } from './routes/_authenticated/parametres'
+import { Route as AuthenticatedProduitsRouteImport } from './routes/_authenticated/produits'
+import { Route as AuthenticatedRapportRouteImport } from './routes/_authenticated/rapport'
+import { Route as AuthenticatedSalairesRouteImport } from './routes/_authenticated/salaires'
+import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
+import { Route as AuthenticatedTransfertsRouteImport } from './routes/_authenticated/transferts'
+import { Route as AuthenticatedVenteRouteImport } from './routes/_authenticated/vente'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCollaborateursRoute =
+  AuthenticatedCollaborateursRouteImport.update({
+    id: '/collaborateurs',
+    path: '/collaborateurs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComptesRoute = AuthenticatedComptesRouteImport.update({
+  id: '/comptes',
+  path: '/comptes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDepensesRoute = AuthenticatedDepensesRouteImport.update({
+  id: '/depenses',
+  path: '/depenses',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEpargneRoute = AuthenticatedEpargneRouteImport.update({
+  id: '/epargne',
+  path: '/epargne',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFacturesRoute = AuthenticatedFacturesRouteImport.update({
+  id: '/factures',
+  path: '/factures',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
+  id: '/historique',
+  path: '/historique',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedManquesPertesRoute =
+  AuthenticatedManquesPertesRouteImport.update({
+    id: '/manques-pertes',
+    path: '/manques-pertes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMonEspaceRoute = AuthenticatedMonEspaceRouteImport.update({
+  id: '/mon-espace',
+  path: '/mon-espace',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMouvementsRoute = AuthenticatedMouvementsRouteImport.update({
+  id: '/mouvements',
+  path: '/mouvements',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedParametresRoute = AuthenticatedParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProduitsRoute = AuthenticatedProduitsRouteImport.update({
+  id: '/produits',
+  path: '/produits',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRapportRoute = AuthenticatedRapportRouteImport.update({
+  id: '/rapport',
+  path: '/rapport',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSalairesRoute = AuthenticatedSalairesRouteImport.update({
+  id: '/salaires',
+  path: '/salaires',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTableauDeBordRoute =
+  AuthenticatedTableauDeBordRouteImport.update({
+    id: '/tableau-de-bord',
+    path: '/tableau-de-bord',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTransfertsRoute = AuthenticatedTransfertsRouteImport.update({
+  id: '/transferts',
+  path: '/transferts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVenteRoute = AuthenticatedVenteRouteImport.update({
+  id: '/vente',
+  path: '/vente',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/collaborateurs': typeof AuthenticatedCollaborateursRoute
+  '/comptes': typeof AuthenticatedComptesRoute
+  '/depenses': typeof AuthenticatedDepensesRoute
+  '/epargne': typeof AuthenticatedEpargneRoute
+  '/factures': typeof AuthenticatedFacturesRoute
+  '/historique': typeof AuthenticatedHistoriqueRoute
+  '/manques-pertes': typeof AuthenticatedManquesPertesRoute
+  '/mon-espace': typeof AuthenticatedMonEspaceRoute
+  '/mouvements': typeof AuthenticatedMouvementsRoute
+  '/parametres': typeof AuthenticatedParametresRoute
+  '/produits': typeof AuthenticatedProduitsRoute
+  '/rapport': typeof AuthenticatedRapportRoute
+  '/salaires': typeof AuthenticatedSalairesRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/transferts': typeof AuthenticatedTransfertsRoute
+  '/vente': typeof AuthenticatedVenteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/collaborateurs': typeof AuthenticatedCollaborateursRoute
+  '/comptes': typeof AuthenticatedComptesRoute
+  '/depenses': typeof AuthenticatedDepensesRoute
+  '/epargne': typeof AuthenticatedEpargneRoute
+  '/factures': typeof AuthenticatedFacturesRoute
+  '/historique': typeof AuthenticatedHistoriqueRoute
+  '/manques-pertes': typeof AuthenticatedManquesPertesRoute
+  '/mon-espace': typeof AuthenticatedMonEspaceRoute
+  '/mouvements': typeof AuthenticatedMouvementsRoute
+  '/parametres': typeof AuthenticatedParametresRoute
+  '/produits': typeof AuthenticatedProduitsRoute
+  '/rapport': typeof AuthenticatedRapportRoute
+  '/salaires': typeof AuthenticatedSalairesRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/transferts': typeof AuthenticatedTransfertsRoute
+  '/vente': typeof AuthenticatedVenteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/collaborateurs': typeof AuthenticatedCollaborateursRoute
+  '/_authenticated/comptes': typeof AuthenticatedComptesRoute
+  '/_authenticated/depenses': typeof AuthenticatedDepensesRoute
+  '/_authenticated/epargne': typeof AuthenticatedEpargneRoute
+  '/_authenticated/factures': typeof AuthenticatedFacturesRoute
+  '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/_authenticated/manques-pertes': typeof AuthenticatedManquesPertesRoute
+  '/_authenticated/mon-espace': typeof AuthenticatedMonEspaceRoute
+  '/_authenticated/mouvements': typeof AuthenticatedMouvementsRoute
+  '/_authenticated/parametres': typeof AuthenticatedParametresRoute
+  '/_authenticated/produits': typeof AuthenticatedProduitsRoute
+  '/_authenticated/rapport': typeof AuthenticatedRapportRoute
+  '/_authenticated/salaires': typeof AuthenticatedSalairesRoute
+  '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/_authenticated/transferts': typeof AuthenticatedTransfertsRoute
+  '/_authenticated/vente': typeof AuthenticatedVenteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/collaborateurs'
+    | '/comptes'
+    | '/depenses'
+    | '/epargne'
+    | '/factures'
+    | '/historique'
+    | '/manques-pertes'
+    | '/mon-espace'
+    | '/mouvements'
+    | '/parametres'
+    | '/produits'
+    | '/rapport'
+    | '/salaires'
+    | '/tableau-de-bord'
+    | '/transferts'
+    | '/vente'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/collaborateurs'
+    | '/comptes'
+    | '/depenses'
+    | '/epargne'
+    | '/factures'
+    | '/historique'
+    | '/manques-pertes'
+    | '/mon-espace'
+    | '/mouvements'
+    | '/parametres'
+    | '/produits'
+    | '/rapport'
+    | '/salaires'
+    | '/tableau-de-bord'
+    | '/transferts'
+    | '/vente'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/collaborateurs'
+    | '/_authenticated/comptes'
+    | '/_authenticated/depenses'
+    | '/_authenticated/epargne'
+    | '/_authenticated/factures'
+    | '/_authenticated/historique'
+    | '/_authenticated/manques-pertes'
+    | '/_authenticated/mon-espace'
+    | '/_authenticated/mouvements'
+    | '/_authenticated/parametres'
+    | '/_authenticated/produits'
+    | '/_authenticated/rapport'
+    | '/_authenticated/salaires'
+    | '/_authenticated/tableau-de-bord'
+    | '/_authenticated/transferts'
+    | '/_authenticated/vente'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +268,180 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/collaborateurs': {
+      id: '/_authenticated/collaborateurs'
+      path: '/collaborateurs'
+      fullPath: '/collaborateurs'
+      preLoaderRoute: typeof AuthenticatedCollaborateursRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/comptes': {
+      id: '/_authenticated/comptes'
+      path: '/comptes'
+      fullPath: '/comptes'
+      preLoaderRoute: typeof AuthenticatedComptesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/depenses': {
+      id: '/_authenticated/depenses'
+      path: '/depenses'
+      fullPath: '/depenses'
+      preLoaderRoute: typeof AuthenticatedDepensesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/epargne': {
+      id: '/_authenticated/epargne'
+      path: '/epargne'
+      fullPath: '/epargne'
+      preLoaderRoute: typeof AuthenticatedEpargneRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/factures': {
+      id: '/_authenticated/factures'
+      path: '/factures'
+      fullPath: '/factures'
+      preLoaderRoute: typeof AuthenticatedFacturesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/historique': {
+      id: '/_authenticated/historique'
+      path: '/historique'
+      fullPath: '/historique'
+      preLoaderRoute: typeof AuthenticatedHistoriqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manques-pertes': {
+      id: '/_authenticated/manques-pertes'
+      path: '/manques-pertes'
+      fullPath: '/manques-pertes'
+      preLoaderRoute: typeof AuthenticatedManquesPertesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mon-espace': {
+      id: '/_authenticated/mon-espace'
+      path: '/mon-espace'
+      fullPath: '/mon-espace'
+      preLoaderRoute: typeof AuthenticatedMonEspaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mouvements': {
+      id: '/_authenticated/mouvements'
+      path: '/mouvements'
+      fullPath: '/mouvements'
+      preLoaderRoute: typeof AuthenticatedMouvementsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/parametres': {
+      id: '/_authenticated/parametres'
+      path: '/parametres'
+      fullPath: '/parametres'
+      preLoaderRoute: typeof AuthenticatedParametresRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/produits': {
+      id: '/_authenticated/produits'
+      path: '/produits'
+      fullPath: '/produits'
+      preLoaderRoute: typeof AuthenticatedProduitsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/rapport': {
+      id: '/_authenticated/rapport'
+      path: '/rapport'
+      fullPath: '/rapport'
+      preLoaderRoute: typeof AuthenticatedRapportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/salaires': {
+      id: '/_authenticated/salaires'
+      path: '/salaires'
+      fullPath: '/salaires'
+      preLoaderRoute: typeof AuthenticatedSalairesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tableau-de-bord': {
+      id: '/_authenticated/tableau-de-bord'
+      path: '/tableau-de-bord'
+      fullPath: '/tableau-de-bord'
+      preLoaderRoute: typeof AuthenticatedTableauDeBordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/transferts': {
+      id: '/_authenticated/transferts'
+      path: '/transferts'
+      fullPath: '/transferts'
+      preLoaderRoute: typeof AuthenticatedTransfertsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vente': {
+      id: '/_authenticated/vente'
+      path: '/vente'
+      fullPath: '/vente'
+      preLoaderRoute: typeof AuthenticatedVenteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCollaborateursRoute: typeof AuthenticatedCollaborateursRoute
+  AuthenticatedComptesRoute: typeof AuthenticatedComptesRoute
+  AuthenticatedDepensesRoute: typeof AuthenticatedDepensesRoute
+  AuthenticatedEpargneRoute: typeof AuthenticatedEpargneRoute
+  AuthenticatedFacturesRoute: typeof AuthenticatedFacturesRoute
+  AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
+  AuthenticatedManquesPertesRoute: typeof AuthenticatedManquesPertesRoute
+  AuthenticatedMonEspaceRoute: typeof AuthenticatedMonEspaceRoute
+  AuthenticatedMouvementsRoute: typeof AuthenticatedMouvementsRoute
+  AuthenticatedParametresRoute: typeof AuthenticatedParametresRoute
+  AuthenticatedProduitsRoute: typeof AuthenticatedProduitsRoute
+  AuthenticatedRapportRoute: typeof AuthenticatedRapportRoute
+  AuthenticatedSalairesRoute: typeof AuthenticatedSalairesRoute
+  AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
+  AuthenticatedTransfertsRoute: typeof AuthenticatedTransfertsRoute
+  AuthenticatedVenteRoute: typeof AuthenticatedVenteRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCollaborateursRoute: AuthenticatedCollaborateursRoute,
+  AuthenticatedComptesRoute: AuthenticatedComptesRoute,
+  AuthenticatedDepensesRoute: AuthenticatedDepensesRoute,
+  AuthenticatedEpargneRoute: AuthenticatedEpargneRoute,
+  AuthenticatedFacturesRoute: AuthenticatedFacturesRoute,
+  AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
+  AuthenticatedManquesPertesRoute: AuthenticatedManquesPertesRoute,
+  AuthenticatedMonEspaceRoute: AuthenticatedMonEspaceRoute,
+  AuthenticatedMouvementsRoute: AuthenticatedMouvementsRoute,
+  AuthenticatedParametresRoute: AuthenticatedParametresRoute,
+  AuthenticatedProduitsRoute: AuthenticatedProduitsRoute,
+  AuthenticatedRapportRoute: AuthenticatedRapportRoute,
+  AuthenticatedSalairesRoute: AuthenticatedSalairesRoute,
+  AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
+  AuthenticatedTransfertsRoute: AuthenticatedTransfertsRoute,
+  AuthenticatedVenteRoute: AuthenticatedVenteRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
