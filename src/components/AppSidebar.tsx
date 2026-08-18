@@ -20,13 +20,14 @@ import {
   LogOut,
   Menu,
   X,
+  Building2,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useCurrentUser, useSignOut } from "@/hooks/useCurrentUser";
 import { ROLE_LABELS } from "@/lib/format";
 
-type NavItem = { to: string; label: string; icon: typeof Package; adminOnly?: boolean };
+type NavItem = { to: string; label: string; icon: typeof Package; adminOnly?: boolean; superAdminOnly?: boolean };
 
 // Pages accessibles au rôle Employé (il n'y voit que ses propres données).
 const EMPLOYEE_PAGES = [
@@ -40,6 +41,7 @@ const EMPLOYEE_PAGES = [
 ];
 
 const NAV: NavItem[] = [
+  { to: "/entreprises", label: "Entreprises", icon: Building2, superAdminOnly: true },
   { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard, adminOnly: true },
   { to: "/produits", label: "Produits / Articles", icon: Package },
   { to: "/mouvements", label: "Mouvements", icon: ArrowLeftRight },
@@ -66,7 +68,7 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const items = user?.isAdmin
-    ? NAV.filter((i) => i.to !== "/mon-espace")
+    ? NAV.filter((i) => i.to !== "/mon-espace").filter((i) => !i.superAdminOnly || user.isSuperAdmin)
     : (EMPLOYEE_PAGES.map((p) => NAV.find((i) => i.to === p)).filter(Boolean) as NavItem[]);
 
   return (
