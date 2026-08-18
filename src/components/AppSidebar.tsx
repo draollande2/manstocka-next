@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { useCurrentUser, useSignOut } from "@/hooks/useCurrentUser";
 import { ROLE_LABELS } from "@/lib/format";
 
-type NavItem = { to: string; label: string; icon: typeof Package; adminOnly?: boolean };
+type NavItem = { to: string; label: string; icon: typeof Package; adminOnly?: boolean; superAdminOnly?: boolean };
 
 // Pages accessibles au rôle Employé (il n'y voit que ses propres données).
 const EMPLOYEE_PAGES = [
