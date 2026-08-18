@@ -107,23 +107,74 @@ function CompaniesPage() {
       if (!name) throw new Error("Le nom de l'entreprise est obligatoire.");
       const slug = slugify(form.slug || name);
       if (!slug) throw new Error("Identifiant (slug) invalide.");
-      const { error } = await supabase.from("companies").insert({
-        name,
-        slug,
-        address: form.address.trim() || null,
-        phone: form.phone.trim() || null,
-        email: form.email.trim() || null,
-        currency: form.currency.trim() || "FCFA",
-        max_sites: Math.max(1, Number(form.max_sites) || 1),
-      });
+      const ownerLogin = form.owner_login.trim();
+      const ownerName = form.owner_name.trim();
+      const ownerPassword = form.owner_password;
+      if (!ownerLogin || !ownerName || ownerPassword.length < 6) {
+        throw new Error(
+          "Renseignez le patron : nom, identifiant de connexion et mot de passe (6 caractères minimum).",
+        );
+      }
+      const { data: created, error } = await supabase
+        .from("companies")
+        .insert({
+          name,
+          slug,
+          address: form.address.trim() || null,
+          phone: form.phone.trim() || null,
+          email: form.email.trim() || null,
+          currency: form.currency.trim() || "FCFA",
+          max_sites: Math.max(1, Number(form.max_sites) || 1),
+        })
+        .select("id")
+        .single();
       if (error) throw error;
-      await logActivity("Entreprise créée", "entreprises", name);
+      await createCompanyOwner({
+        data: {
+          company_id: created.id,
+          full_name: ownerName,
+          login_id: ownerLogin,
+          password: ownerPassword,
+          email: form.email.trim() || "",
+          phone: form.phone.trim() || "",
+        },
+      });
+      await logActivity("Entreprise créée", "entreprises", `${name} — patron ${ownerLogin}`);
+      return ownerLogin;
     },
-    onSuccess: () => {
-      toast.success("Entreprise créée.");
+    onSuccess: (login) => {
+      toast.success(`Entreprise créée. Le patron se connecte avec l'identifiant « ${login} ».`);
       setOpen(false);
       setForm({ ...EMPTY });
       invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const addOwner = useMutation({
+    mutationFn: async () => {
+      if (!ownerFor) throw new Error("Entreprise introuvable.");
+      await createCompanyOwner({
+        data: {
+          company_id: ownerFor.id,
+          full_name: ownerForm.full_name.trim(),
+          login_id: ownerForm.login_id.trim(),
+          password: ownerForm.password,
+          email: ownerForm.email.trim() || "",
+          phone: ownerForm.phone.trim() || "",
+        },
+      });
+      await logActivity(
+        "Compte administrateur créé",
+        "entreprises",
+        `${ownerFor.name} — ${ownerForm.login_id.trim()}`,
+      );
+      return ownerForm.login_id.trim();
+    },
+    onSuccess: (login) => {
+      toast.success(`Compte créé. Connexion avec l'identifiant « ${login} ».`);
+      setOwnerFor(null);
+      setOwnerForm({ ...EMPTY_OWNER });
     },
     onError: (e: Error) => toast.error(e.message),
   });
