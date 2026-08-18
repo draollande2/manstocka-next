@@ -20,6 +20,7 @@ import {
   LogOut,
   Menu,
   X,
+  Building2,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
