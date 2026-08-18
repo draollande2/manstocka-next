@@ -42,12 +42,23 @@ export const createCollaborator = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    const { data: myProfile } = await supabaseAdmin
+      .from("profiles")
+      .select("company_id")
+      .eq("id", context.userId)
+      .maybeSingle();
+    const companyId = myProfile?.company_id ?? null;
+
     const authEmail = loginToEmail(data.login_id);
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: authEmail,
       password: data.password,
       email_confirm: true,
-      user_metadata: { full_name: data.full_name, login_id: data.login_id.trim() },
+      user_metadata: {
+        full_name: data.full_name,
+        login_id: data.login_id.trim(),
+        ...(companyId ? { company_id: companyId } : {}),
+      },
     });
     if (error || !created.user) {
       throw new Error(
@@ -67,6 +78,7 @@ export const createCollaborator = createServerFn({ method: "POST" })
         email: data.email?.trim() || null,
         base_salary: data.base_salary,
         active: true,
+        ...(companyId ? { company_id: companyId } : {}),
       })
       .eq("id", userId);
     if (profileError) throw new Error(profileError.message);
