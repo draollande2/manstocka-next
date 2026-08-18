@@ -68,7 +68,7 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const items = user?.isAdmin
-    ? NAV.filter((i) => i.to !== "/mon-espace")
+    ? NAV.filter((i) => i.to !== "/mon-espace").filter((i) => !i.superAdminOnly || user.isSuperAdmin)
     : (EMPLOYEE_PAGES.map((p) => NAV.find((i) => i.to === p)).filter(Boolean) as NavItem[]);
 
   return (
