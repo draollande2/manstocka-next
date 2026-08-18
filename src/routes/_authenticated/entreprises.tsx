@@ -60,7 +60,12 @@ const EMPTY = {
   email: "",
   currency: "FCFA",
   max_sites: 3,
+  owner_name: "",
+  owner_login: "",
+  owner_password: "",
 };
+
+const EMPTY_OWNER = { full_name: "", login_id: "", password: "", email: "", phone: "" };
 
 function slugify(value: string) {
   return value
