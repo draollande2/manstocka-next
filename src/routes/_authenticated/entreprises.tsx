@@ -83,6 +83,8 @@ function CompaniesPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ ...EMPTY });
+  const [ownerFor, setOwnerFor] = useState<CompanyRow | null>(null);
+  const [ownerForm, setOwnerForm] = useState({ ...EMPTY_OWNER });
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
