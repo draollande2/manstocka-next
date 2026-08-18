@@ -78,6 +78,7 @@ export const createCollaborator = createServerFn({ method: "POST" })
         email: data.email?.trim() || null,
         base_salary: data.base_salary,
         active: true,
+        ...(companyId ? { company_id: companyId } : {}),
       })
       .eq("id", userId);
     if (profileError) throw new Error(profileError.message);
