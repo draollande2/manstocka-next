@@ -304,6 +304,16 @@ function CompaniesPage() {
                     </td>
                     <td className="px-4 py-2 text-right" data-print="hide">
                       <div className="flex justify-end gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setOwnerForm({ ...EMPTY_OWNER });
+                            setOwnerFor(c);
+                          }}
+                        >
+                          Compte patron
+                        </Button>
                         <Button variant="ghost" size="sm" onClick={() => togglePause.mutate(c)}>
                           {c.status === "pause" ? "Réactiver" : "Mettre en pause"}
                         </Button>
