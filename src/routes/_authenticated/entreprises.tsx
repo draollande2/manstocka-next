@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { logActivity, useCurrentUser } from "@/hooks/useCurrentUser";
+import { createCompanyOwner } from "@/lib/companies.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/entreprises")({
