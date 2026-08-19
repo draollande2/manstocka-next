@@ -468,6 +468,42 @@ function CompaniesPage() {
                 maxLength={200}
               />
             </div>
+            <div className="space-y-1 sm:col-span-2">
+              <p className="text-sm font-medium">Compte du patron (administrateur)</p>
+              <p className="text-xs text-muted-foreground">
+                Ce compte permet au patron de se connecter et de créer ensuite ses collaborateurs
+                depuis la page « Collaborateurs ».
+              </p>
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="oname">Nom du patron</Label>
+              <Input
+                id="oname"
+                value={form.owner_name}
+                onChange={(e) => setForm({ ...form, owner_name: e.target.value })}
+                maxLength={120}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ologin">Identifiant de connexion</Label>
+              <Input
+                id="ologin"
+                value={form.owner_login}
+                placeholder="patron.nom"
+                onChange={(e) => setForm({ ...form, owner_login: e.target.value })}
+                maxLength={40}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="opass">Mot de passe</Label>
+              <Input
+                id="opass"
+                type="text"
+                value={form.owner_password}
+                onChange={(e) => setForm({ ...form, owner_password: e.target.value })}
+                maxLength={72}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>
@@ -475,6 +511,73 @@ function CompaniesPage() {
             </Button>
             <Button onClick={() => createCompany.mutate()} disabled={createCompany.isPending}>
               Créer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(ownerFor)} onOpenChange={(o) => !o && setOwnerFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Compte administrateur — {ownerFor?.name}</DialogTitle>
+            <DialogDescription>
+              Créez un accès patron pour cette entreprise. Il pourra ensuite ajouter ses
+              collaborateurs.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="own">Nom complet</Label>
+              <Input
+                id="own"
+                value={ownerForm.full_name}
+                onChange={(e) => setOwnerForm({ ...ownerForm, full_name: e.target.value })}
+                maxLength={120}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="owl">Identifiant</Label>
+              <Input
+                id="owl"
+                value={ownerForm.login_id}
+                onChange={(e) => setOwnerForm({ ...ownerForm, login_id: e.target.value })}
+                maxLength={40}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="owp">Mot de passe</Label>
+              <Input
+                id="owp"
+                value={ownerForm.password}
+                onChange={(e) => setOwnerForm({ ...ownerForm, password: e.target.value })}
+                maxLength={72}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="owph">Téléphone</Label>
+              <Input
+                id="owph"
+                value={ownerForm.phone}
+                onChange={(e) => setOwnerForm({ ...ownerForm, phone: e.target.value })}
+                maxLength={30}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="owe">E-mail</Label>
+              <Input
+                id="owe"
+                value={ownerForm.email}
+                onChange={(e) => setOwnerForm({ ...ownerForm, email: e.target.value })}
+                maxLength={120}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOwnerFor(null)}>
+              Annuler
+            </Button>
+            <Button onClick={() => addOwner.mutate()} disabled={addOwner.isPending}>
+              Créer le compte
             </Button>
           </DialogFooter>
         </DialogContent>
