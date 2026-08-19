@@ -1,0 +1,4 @@
+CREATE POLICY "annonces_read" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'annonces');
+CREATE POLICY "annonces_insert" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'annonces' AND public.is_superadmin(auth.uid()));
+CREATE POLICY "annonces_update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'annonces' AND public.is_superadmin(auth.uid())) WITH CHECK (bucket_id = 'annonces' AND public.is_superadmin(auth.uid()));
+CREATE POLICY "annonces_delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'annonces' AND public.is_superadmin(auth.uid()));
