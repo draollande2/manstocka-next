@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAnnoncesRouteImport } from './routes/_authenticated/annonces'
 import { Route as AuthenticatedCollaborateursRouteImport } from './routes/_authenticated/collaborateurs'
 import { Route as AuthenticatedComptesRouteImport } from './routes/_authenticated/comptes'
 import { Route as AuthenticatedDepensesRouteImport } from './routes/_authenticated/depenses'
@@ -43,6 +44,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAnnoncesRoute = AuthenticatedAnnoncesRouteImport.update({
+  id: '/annonces',
+  path: '/annonces',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCollaborateursRoute =
   AuthenticatedCollaborateursRouteImport.update({
@@ -137,6 +143,7 @@ const AuthenticatedVenteRoute = AuthenticatedVenteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
   '/depenses': typeof AuthenticatedDepensesRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
   '/depenses': typeof AuthenticatedDepensesRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/annonces': typeof AuthenticatedAnnoncesRoute
   '/_authenticated/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/_authenticated/comptes': typeof AuthenticatedComptesRoute
   '/_authenticated/depenses': typeof AuthenticatedDepensesRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/annonces'
     | '/collaborateurs'
     | '/comptes'
     | '/depenses'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/annonces'
     | '/collaborateurs'
     | '/comptes'
     | '/depenses'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/annonces'
     | '/_authenticated/collaborateurs'
     | '/_authenticated/comptes'
     | '/_authenticated/depenses'
@@ -294,6 +306,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/annonces': {
+      id: '/_authenticated/annonces'
+      path: '/annonces'
+      fullPath: '/annonces'
+      preLoaderRoute: typeof AuthenticatedAnnoncesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/collaborateurs': {
       id: '/_authenticated/collaborateurs'
@@ -418,6 +437,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAnnoncesRoute: typeof AuthenticatedAnnoncesRoute
   AuthenticatedCollaborateursRoute: typeof AuthenticatedCollaborateursRoute
   AuthenticatedComptesRoute: typeof AuthenticatedComptesRoute
   AuthenticatedDepensesRoute: typeof AuthenticatedDepensesRoute
@@ -438,6 +458,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAnnoncesRoute: AuthenticatedAnnoncesRoute,
   AuthenticatedCollaborateursRoute: AuthenticatedCollaborateursRoute,
   AuthenticatedComptesRoute: AuthenticatedComptesRoute,
   AuthenticatedDepensesRoute: AuthenticatedDepensesRoute,
