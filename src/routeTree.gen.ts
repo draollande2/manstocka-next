@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAbonnementRouteImport } from './routes/_authenticated/abonnement'
 import { Route as AuthenticatedAnnoncesRouteImport } from './routes/_authenticated/annonces'
 import { Route as AuthenticatedCollaborateursRouteImport } from './routes/_authenticated/collaborateurs'
 import { Route as AuthenticatedComptesRouteImport } from './routes/_authenticated/comptes'
@@ -45,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAbonnementRoute = AuthenticatedAbonnementRouteImport.update({
+  id: '/abonnement',
+  path: '/abonnement',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAnnoncesRoute = AuthenticatedAnnoncesRouteImport.update({
   id: '/annonces',
@@ -150,6 +156,7 @@ const AuthenticatedVenteRoute = AuthenticatedVenteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/abonnement': typeof AuthenticatedAbonnementRoute
   '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/abonnement': typeof AuthenticatedAbonnementRoute
   '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/abonnement': typeof AuthenticatedAbonnementRoute
   '/_authenticated/annonces': typeof AuthenticatedAnnoncesRoute
   '/_authenticated/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/_authenticated/comptes': typeof AuthenticatedComptesRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/abonnement'
     | '/annonces'
     | '/collaborateurs'
     | '/comptes'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/abonnement'
     | '/annonces'
     | '/collaborateurs'
     | '/comptes'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/abonnement'
     | '/_authenticated/annonces'
     | '/_authenticated/collaborateurs'
     | '/_authenticated/comptes'
@@ -319,6 +331,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/abonnement': {
+      id: '/_authenticated/abonnement'
+      path: '/abonnement'
+      fullPath: '/abonnement'
+      preLoaderRoute: typeof AuthenticatedAbonnementRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/annonces': {
       id: '/_authenticated/annonces'
@@ -457,6 +476,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAbonnementRoute: typeof AuthenticatedAbonnementRoute
   AuthenticatedAnnoncesRoute: typeof AuthenticatedAnnoncesRoute
   AuthenticatedCollaborateursRoute: typeof AuthenticatedCollaborateursRoute
   AuthenticatedComptesRoute: typeof AuthenticatedComptesRoute
@@ -479,6 +499,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAbonnementRoute: AuthenticatedAbonnementRoute,
   AuthenticatedAnnoncesRoute: AuthenticatedAnnoncesRoute,
   AuthenticatedCollaborateursRoute: AuthenticatedCollaborateursRoute,
   AuthenticatedComptesRoute: AuthenticatedComptesRoute,
