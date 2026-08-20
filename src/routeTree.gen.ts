@@ -12,11 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAbonnementRouteImport } from './routes/_authenticated/abonnement'
+import { Route as AuthenticatedAnnoncesRouteImport } from './routes/_authenticated/annonces'
 import { Route as AuthenticatedCollaborateursRouteImport } from './routes/_authenticated/collaborateurs'
 import { Route as AuthenticatedComptesRouteImport } from './routes/_authenticated/comptes'
 import { Route as AuthenticatedDepensesRouteImport } from './routes/_authenticated/depenses'
 import { Route as AuthenticatedEntreprisesRouteImport } from './routes/_authenticated/entreprises'
 import { Route as AuthenticatedEpargneRouteImport } from './routes/_authenticated/epargne'
+import { Route as AuthenticatedFacturationRouteImport } from './routes/_authenticated/facturation'
 import { Route as AuthenticatedFacturesRouteImport } from './routes/_authenticated/factures'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
 import { Route as AuthenticatedManquesPertesRouteImport } from './routes/_authenticated/manques-pertes'
@@ -43,6 +46,16 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAbonnementRoute = AuthenticatedAbonnementRouteImport.update({
+  id: '/abonnement',
+  path: '/abonnement',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnnoncesRoute = AuthenticatedAnnoncesRouteImport.update({
+  id: '/annonces',
+  path: '/annonces',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCollaborateursRoute =
   AuthenticatedCollaborateursRouteImport.update({
@@ -71,6 +84,12 @@ const AuthenticatedEpargneRoute = AuthenticatedEpargneRouteImport.update({
   path: '/epargne',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFacturationRoute =
+  AuthenticatedFacturationRouteImport.update({
+    id: '/facturation',
+    path: '/facturation',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFacturesRoute = AuthenticatedFacturesRouteImport.update({
   id: '/factures',
   path: '/factures',
@@ -137,11 +156,14 @@ const AuthenticatedVenteRoute = AuthenticatedVenteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/abonnement': typeof AuthenticatedAbonnementRoute
+  '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
   '/depenses': typeof AuthenticatedDepensesRoute
   '/entreprises': typeof AuthenticatedEntreprisesRoute
   '/epargne': typeof AuthenticatedEpargneRoute
+  '/facturation': typeof AuthenticatedFacturationRoute
   '/factures': typeof AuthenticatedFacturesRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/manques-pertes': typeof AuthenticatedManquesPertesRoute
@@ -158,11 +180,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/abonnement': typeof AuthenticatedAbonnementRoute
+  '/annonces': typeof AuthenticatedAnnoncesRoute
   '/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/comptes': typeof AuthenticatedComptesRoute
   '/depenses': typeof AuthenticatedDepensesRoute
   '/entreprises': typeof AuthenticatedEntreprisesRoute
   '/epargne': typeof AuthenticatedEpargneRoute
+  '/facturation': typeof AuthenticatedFacturationRoute
   '/factures': typeof AuthenticatedFacturesRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
   '/manques-pertes': typeof AuthenticatedManquesPertesRoute
@@ -181,11 +206,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/abonnement': typeof AuthenticatedAbonnementRoute
+  '/_authenticated/annonces': typeof AuthenticatedAnnoncesRoute
   '/_authenticated/collaborateurs': typeof AuthenticatedCollaborateursRoute
   '/_authenticated/comptes': typeof AuthenticatedComptesRoute
   '/_authenticated/depenses': typeof AuthenticatedDepensesRoute
   '/_authenticated/entreprises': typeof AuthenticatedEntreprisesRoute
   '/_authenticated/epargne': typeof AuthenticatedEpargneRoute
+  '/_authenticated/facturation': typeof AuthenticatedFacturationRoute
   '/_authenticated/factures': typeof AuthenticatedFacturesRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
   '/_authenticated/manques-pertes': typeof AuthenticatedManquesPertesRoute
@@ -204,11 +232,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/abonnement'
+    | '/annonces'
     | '/collaborateurs'
     | '/comptes'
     | '/depenses'
     | '/entreprises'
     | '/epargne'
+    | '/facturation'
     | '/factures'
     | '/historique'
     | '/manques-pertes'
@@ -225,11 +256,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/abonnement'
+    | '/annonces'
     | '/collaborateurs'
     | '/comptes'
     | '/depenses'
     | '/entreprises'
     | '/epargne'
+    | '/facturation'
     | '/factures'
     | '/historique'
     | '/manques-pertes'
@@ -247,11 +281,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/abonnement'
+    | '/_authenticated/annonces'
     | '/_authenticated/collaborateurs'
     | '/_authenticated/comptes'
     | '/_authenticated/depenses'
     | '/_authenticated/entreprises'
     | '/_authenticated/epargne'
+    | '/_authenticated/facturation'
     | '/_authenticated/factures'
     | '/_authenticated/historique'
     | '/_authenticated/manques-pertes'
@@ -295,6 +332,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/abonnement': {
+      id: '/_authenticated/abonnement'
+      path: '/abonnement'
+      fullPath: '/abonnement'
+      preLoaderRoute: typeof AuthenticatedAbonnementRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/annonces': {
+      id: '/_authenticated/annonces'
+      path: '/annonces'
+      fullPath: '/annonces'
+      preLoaderRoute: typeof AuthenticatedAnnoncesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/collaborateurs': {
       id: '/_authenticated/collaborateurs'
       path: '/collaborateurs'
@@ -328,6 +379,13 @@ declare module '@tanstack/react-router' {
       path: '/epargne'
       fullPath: '/epargne'
       preLoaderRoute: typeof AuthenticatedEpargneRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/facturation': {
+      id: '/_authenticated/facturation'
+      path: '/facturation'
+      fullPath: '/facturation'
+      preLoaderRoute: typeof AuthenticatedFacturationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/factures': {
@@ -418,11 +476,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAbonnementRoute: typeof AuthenticatedAbonnementRoute
+  AuthenticatedAnnoncesRoute: typeof AuthenticatedAnnoncesRoute
   AuthenticatedCollaborateursRoute: typeof AuthenticatedCollaborateursRoute
   AuthenticatedComptesRoute: typeof AuthenticatedComptesRoute
   AuthenticatedDepensesRoute: typeof AuthenticatedDepensesRoute
   AuthenticatedEntreprisesRoute: typeof AuthenticatedEntreprisesRoute
   AuthenticatedEpargneRoute: typeof AuthenticatedEpargneRoute
+  AuthenticatedFacturationRoute: typeof AuthenticatedFacturationRoute
   AuthenticatedFacturesRoute: typeof AuthenticatedFacturesRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
   AuthenticatedManquesPertesRoute: typeof AuthenticatedManquesPertesRoute
@@ -438,11 +499,14 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAbonnementRoute: AuthenticatedAbonnementRoute,
+  AuthenticatedAnnoncesRoute: AuthenticatedAnnoncesRoute,
   AuthenticatedCollaborateursRoute: AuthenticatedCollaborateursRoute,
   AuthenticatedComptesRoute: AuthenticatedComptesRoute,
   AuthenticatedDepensesRoute: AuthenticatedDepensesRoute,
   AuthenticatedEntreprisesRoute: AuthenticatedEntreprisesRoute,
   AuthenticatedEpargneRoute: AuthenticatedEpargneRoute,
+  AuthenticatedFacturationRoute: AuthenticatedFacturationRoute,
   AuthenticatedFacturesRoute: AuthenticatedFacturesRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
   AuthenticatedManquesPertesRoute: AuthenticatedManquesPertesRoute,
