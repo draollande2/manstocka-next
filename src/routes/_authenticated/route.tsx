@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SiteProvider } from "@/hooks/useSite";
 import { SiteSwitcher } from "@/components/SiteSwitcher";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -25,7 +26,10 @@ function AuthenticatedLayout() {
         >
           <SiteSwitcher />
         </header>
-        <main className="px-4 pb-16 pt-20 lg:pl-[19rem] lg:pr-8">
+        <div className="pt-14 lg:pl-[19rem]">
+          <AnnouncementBanner />
+        </div>
+        <main className="px-4 pb-16 pt-6 lg:pl-[19rem] lg:pr-8">
           <Outlet />
         </main>
       </div>

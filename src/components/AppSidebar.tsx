@@ -21,6 +21,8 @@ import {
   Menu,
   X,
   Building2,
+  Megaphone,
+  CreditCard,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -61,6 +63,7 @@ const NAV: NavItem[] = [
   { to: "/parametres", label: "Paramètres", icon: Settings, adminOnly: true },
   { to: "/mon-espace", label: "Mon espace employé", icon: UserCircle },
   { to: "/epargne", label: "Compte d'épargne", icon: PiggyBank },
+  { to: "/abonnement", label: "Abonnement", icon: CreditCard, adminOnly: true },
 ];
 
 
