@@ -42,7 +42,10 @@ const EMPLOYEE_PAGES = [
 
 const NAV: NavItem[] = [
   { to: "/entreprises", label: "Entreprises", icon: Building2, superAdminOnly: true },
+  { to: "/annonces", label: "Messages défilants", icon: Megaphone, superAdminOnly: true },
+  { to: "/facturation", label: "Facturation", icon: CreditCard, superAdminOnly: true },
   { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard, adminOnly: true },
+
   { to: "/produits", label: "Produits / Articles", icon: Package },
   { to: "/mouvements", label: "Mouvements", icon: ArrowLeftRight },
   { to: "/transferts", label: "Transferts de stock", icon: ArrowRightLeft },
