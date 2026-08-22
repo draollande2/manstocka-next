@@ -95,5 +95,47 @@ export const updateUserCredentials = createServerFn({ method: "POST" })
       if (profileError) throw new Error(profileError.message);
     }
 
+    const secret: Record<string, unknown> = { user_id: data.user_id, updated_at: new Date().toISOString() };
+    if (newLogin) secret["login_id"] = newLogin;
+    if (data.password) secret["password"] = data.password;
+    await (supabaseAdmin as unknown as {
+      from: (t: string) => {
+        upsert: (v: unknown, o: unknown) => Promise<{ error: unknown }>;
+      };
+    })
+      .from("account_secrets")
+      .upsert(secret, { onConflict: "user_id" });
+
     return { ok: true, login_id: newLogin ?? null };
+  });
+
+export const getUserCredentials = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ user_id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const [{ data: profile }, secretRes] = await Promise.all([
+      supabaseAdmin.from("profiles").select("full_name, login_id").eq("id", data.user_id).maybeSingle(),
+      (supabaseAdmin as unknown as {
+        from: (t: string) => {
+          select: (c: string) => {
+            eq: (c: string, v: string) => { maybeSingle: () => Promise<{ data: { password: string | null } | null }> };
+          };
+        };
+      })
+        .from("account_secrets")
+        .select("password")
+        .eq("user_id", data.user_id)
+        .maybeSingle(),
+    ]);
+
+    const login = profile?.login_id ?? null;
+    return {
+      full_name: profile?.full_name ?? "",
+      login_id: login,
+      email: login ? loginToEmail(login) : null,
+      password: secretRes.data?.password ?? null,
+    };
   });

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { KeyRound } from "lucide-react";
+import { Eye, KeyRound } from "lucide-react";
 import { PageShell, Panel, EmptyRow } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { logActivity, useCurrentUser } from "@/hooks/useCurrentUser";
-import { listAllAccounts, updateUserCredentials } from "@/lib/accounts.functions";
+import {
+  getUserCredentials,
+  listAllAccounts,
+  updateUserCredentials,
+} from "@/lib/accounts.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/identifiants")({
@@ -61,6 +65,21 @@ function CredentialsPage() {
   const [target, setTarget] = useState<Account | null>(null);
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
+  const [viewing, setViewing] = useState<Account | null>(null);
+
+  type Creds = {
+    full_name: string;
+    login_id: string | null;
+    email: string | null;
+    password: string | null;
+  };
+
+  const credsQuery = useQuery({
+    queryKey: ["account-credentials", viewing?.id],
+    queryFn: () => getUserCredentials({ data: { user_id: viewing!.id } }) as Promise<Creds>,
+    enabled: !!viewing,
+  });
+
 
   const { data: accounts, isLoading } = useQuery({
     queryKey: ["all-accounts"],
@@ -158,17 +177,22 @@ function CredentialsPage() {
                       </Badge>
                     </td>
                     <td className="px-4 py-2 text-right" data-print="hide">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setTarget(a);
-                          setLoginId(a.login_id ?? "");
-                          setPassword("");
-                        }}
-                      >
-                        <KeyRound className="size-4" /> Modifier les accès
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setTarget(a);
+                            setLoginId(a.login_id ?? "");
+                            setPassword("");
+                          }}
+                        >
+                          <KeyRound className="size-4" /> Modifier les accès
+                        </Button>
+                        <Button variant="secondary" size="sm" onClick={() => setViewing(a)}>
+                          <Eye className="size-4" /> Voir les accès
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))

@@ -23,10 +23,8 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "signup">("login");
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function homeFor(userId: string) {
@@ -52,18 +50,8 @@ function AuthPage() {
     setLoading(true);
     const email = loginToEmail(loginId);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { full_name: fullName || loginId, login_id: loginId.trim() } },
-        });
-        if (error) throw error;
-        toast.success("Compte créé. Vous êtes connecté.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       await logActivity("Connexion", "auth", `Identifiant : ${loginId}`);
       const { data: session } = await supabase.auth.getUser();
       const to = session.user ? await homeFor(session.user.id) : "/mon-espace";
@@ -81,28 +69,12 @@ function AuthPage() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-16">
       <div className="panel w-full max-w-md p-8">
         <p className="font-display text-sm font-bold tracking-[0.3em] text-primary">STOCKA</p>
-        <h1 className="mt-3 font-display text-2xl font-bold">
-          {mode === "login" ? "Connexion collaborateur" : "Créer le premier compte"}
-        </h1>
+        <h1 className="mt-3 font-display text-2xl font-bold">Connexion collaborateur</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {mode === "login"
-            ? "Utilisez l'identifiant et le mot de passe fournis par votre administrateur."
-            : "Le tout premier compte créé devient Super-administrateur."}
+          Utilisez l'identifiant et le mot de passe fournis par votre administrateur.
         </p>
 
         <form onSubmit={submit} className="mt-6 space-y-4">
-          {mode === "signup" && (
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Nom complet</Label>
-              <Input
-                id="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Aïcha Diallo"
-                maxLength={80}
-              />
-            </div>
-          )}
           <div className="space-y-2">
             <Label htmlFor="loginId">Identifiant</Label>
             <Input
@@ -121,24 +93,15 @@ function AuthPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               maxLength={72}
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Patientez…" : mode === "login" ? "Se connecter" : "Créer le compte"}
+            {loading ? "Patientez…" : "Se connecter"}
           </Button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "login" ? "signup" : "login")}
-          className="mt-5 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-        >
-          {mode === "login"
-            ? "Première installation ? Créer le compte Super-administrateur"
-            : "J'ai déjà un identifiant"}
-        </button>
       </div>
     </main>
   );
