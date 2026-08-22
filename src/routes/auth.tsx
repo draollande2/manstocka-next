@@ -93,12 +93,12 @@ function AuthPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               maxLength={72}
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Patientez…" : mode === "login" ? "Se connecter" : "Créer le compte"}
+            {loading ? "Patientez…" : "Se connecter"}
           </Button>
         </form>
 
