@@ -69,28 +69,12 @@ function AuthPage() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-16">
       <div className="panel w-full max-w-md p-8">
         <p className="font-display text-sm font-bold tracking-[0.3em] text-primary">STOCKA</p>
-        <h1 className="mt-3 font-display text-2xl font-bold">
-          {mode === "login" ? "Connexion collaborateur" : "Créer le premier compte"}
-        </h1>
+        <h1 className="mt-3 font-display text-2xl font-bold">Connexion collaborateur</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {mode === "login"
-            ? "Utilisez l'identifiant et le mot de passe fournis par votre administrateur."
-            : "Le tout premier compte créé devient Super-administrateur."}
+          Utilisez l'identifiant et le mot de passe fournis par votre administrateur.
         </p>
 
         <form onSubmit={submit} className="mt-6 space-y-4">
-          {mode === "signup" && (
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Nom complet</Label>
-              <Input
-                id="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Aïcha Diallo"
-                maxLength={80}
-              />
-            </div>
-          )}
           <div className="space-y-2">
             <Label htmlFor="loginId">Identifiant</Label>
             <Input
