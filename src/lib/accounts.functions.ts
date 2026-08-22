@@ -96,8 +96,8 @@ export const updateUserCredentials = createServerFn({ method: "POST" })
     }
 
     const secret: Record<string, unknown> = { user_id: data.user_id, updated_at: new Date().toISOString() };
-    if (newLogin) secret.login_id = newLogin;
-    if (data.password) secret.password = data.password;
+    if (newLogin) secret["login_id"] = newLogin;
+    if (data.password) secret["password"] = data.password;
     await (supabaseAdmin as unknown as {
       from: (t: string) => {
         upsert: (v: unknown, o: unknown) => Promise<{ error: unknown }>;
