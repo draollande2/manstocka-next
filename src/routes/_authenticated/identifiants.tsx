@@ -177,17 +177,22 @@ function CredentialsPage() {
                       </Badge>
                     </td>
                     <td className="px-4 py-2 text-right" data-print="hide">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setTarget(a);
-                          setLoginId(a.login_id ?? "");
-                          setPassword("");
-                        }}
-                      >
-                        <KeyRound className="size-4" /> Modifier les accès
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setTarget(a);
+                            setLoginId(a.login_id ?? "");
+                            setPassword("");
+                          }}
+                        >
+                          <KeyRound className="size-4" /> Modifier les accès
+                        </Button>
+                        <Button variant="secondary" size="sm" onClick={() => setViewing(a)}>
+                          <Eye className="size-4" /> Voir les accès
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
