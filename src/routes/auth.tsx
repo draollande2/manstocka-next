@@ -130,15 +130,6 @@ function AuthPage() {
           </Button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "login" ? "signup" : "login")}
-          className="mt-5 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-        >
-          {mode === "login"
-            ? "Première installation ? Créer le compte Super-administrateur"
-            : "J'ai déjà un identifiant"}
-        </button>
       </div>
     </main>
   );
