@@ -22,6 +22,7 @@ import { Route as AuthenticatedEpargneRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedFacturationRouteImport } from './routes/_authenticated/facturation'
 import { Route as AuthenticatedFacturesRouteImport } from './routes/_authenticated/factures'
 import { Route as AuthenticatedHistoriqueRouteImport } from './routes/_authenticated/historique'
+import { Route as AuthenticatedIdentifiantsRouteImport } from './routes/_authenticated/identifiants'
 import { Route as AuthenticatedManquesPertesRouteImport } from './routes/_authenticated/manques-pertes'
 import { Route as AuthenticatedMonEspaceRouteImport } from './routes/_authenticated/mon-espace'
 import { Route as AuthenticatedMouvementsRouteImport } from './routes/_authenticated/mouvements'
@@ -100,6 +101,12 @@ const AuthenticatedHistoriqueRoute = AuthenticatedHistoriqueRouteImport.update({
   path: '/historique',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedIdentifiantsRoute =
+  AuthenticatedIdentifiantsRouteImport.update({
+    id: '/identifiants',
+    path: '/identifiants',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedManquesPertesRoute =
   AuthenticatedManquesPertesRouteImport.update({
     id: '/manques-pertes',
@@ -166,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/facturation': typeof AuthenticatedFacturationRoute
   '/factures': typeof AuthenticatedFacturesRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/identifiants': typeof AuthenticatedIdentifiantsRoute
   '/manques-pertes': typeof AuthenticatedManquesPertesRoute
   '/mon-espace': typeof AuthenticatedMonEspaceRoute
   '/mouvements': typeof AuthenticatedMouvementsRoute
@@ -190,6 +198,7 @@ export interface FileRoutesByTo {
   '/facturation': typeof AuthenticatedFacturationRoute
   '/factures': typeof AuthenticatedFacturesRoute
   '/historique': typeof AuthenticatedHistoriqueRoute
+  '/identifiants': typeof AuthenticatedIdentifiantsRoute
   '/manques-pertes': typeof AuthenticatedManquesPertesRoute
   '/mon-espace': typeof AuthenticatedMonEspaceRoute
   '/mouvements': typeof AuthenticatedMouvementsRoute
@@ -216,6 +225,7 @@ export interface FileRoutesById {
   '/_authenticated/facturation': typeof AuthenticatedFacturationRoute
   '/_authenticated/factures': typeof AuthenticatedFacturesRoute
   '/_authenticated/historique': typeof AuthenticatedHistoriqueRoute
+  '/_authenticated/identifiants': typeof AuthenticatedIdentifiantsRoute
   '/_authenticated/manques-pertes': typeof AuthenticatedManquesPertesRoute
   '/_authenticated/mon-espace': typeof AuthenticatedMonEspaceRoute
   '/_authenticated/mouvements': typeof AuthenticatedMouvementsRoute
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/facturation'
     | '/factures'
     | '/historique'
+    | '/identifiants'
     | '/manques-pertes'
     | '/mon-espace'
     | '/mouvements'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/facturation'
     | '/factures'
     | '/historique'
+    | '/identifiants'
     | '/manques-pertes'
     | '/mon-espace'
     | '/mouvements'
@@ -291,6 +303,7 @@ export interface FileRouteTypes {
     | '/_authenticated/facturation'
     | '/_authenticated/factures'
     | '/_authenticated/historique'
+    | '/_authenticated/identifiants'
     | '/_authenticated/manques-pertes'
     | '/_authenticated/mon-espace'
     | '/_authenticated/mouvements'
@@ -402,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHistoriqueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/identifiants': {
+      id: '/_authenticated/identifiants'
+      path: '/identifiants'
+      fullPath: '/identifiants'
+      preLoaderRoute: typeof AuthenticatedIdentifiantsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/manques-pertes': {
       id: '/_authenticated/manques-pertes'
       path: '/manques-pertes'
@@ -486,6 +506,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFacturationRoute: typeof AuthenticatedFacturationRoute
   AuthenticatedFacturesRoute: typeof AuthenticatedFacturesRoute
   AuthenticatedHistoriqueRoute: typeof AuthenticatedHistoriqueRoute
+  AuthenticatedIdentifiantsRoute: typeof AuthenticatedIdentifiantsRoute
   AuthenticatedManquesPertesRoute: typeof AuthenticatedManquesPertesRoute
   AuthenticatedMonEspaceRoute: typeof AuthenticatedMonEspaceRoute
   AuthenticatedMouvementsRoute: typeof AuthenticatedMouvementsRoute
@@ -509,6 +530,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFacturationRoute: AuthenticatedFacturationRoute,
   AuthenticatedFacturesRoute: AuthenticatedFacturesRoute,
   AuthenticatedHistoriqueRoute: AuthenticatedHistoriqueRoute,
+  AuthenticatedIdentifiantsRoute: AuthenticatedIdentifiantsRoute,
   AuthenticatedManquesPertesRoute: AuthenticatedManquesPertesRoute,
   AuthenticatedMonEspaceRoute: AuthenticatedMonEspaceRoute,
   AuthenticatedMouvementsRoute: AuthenticatedMouvementsRoute,
