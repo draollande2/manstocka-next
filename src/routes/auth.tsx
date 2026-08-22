@@ -50,18 +50,8 @@ function AuthPage() {
     setLoading(true);
     const email = loginToEmail(loginId);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { full_name: fullName || loginId, login_id: loginId.trim() } },
-        });
-        if (error) throw error;
-        toast.success("Compte créé. Vous êtes connecté.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       await logActivity("Connexion", "auth", `Identifiant : ${loginId}`);
       const { data: session } = await supabase.auth.getUser();
       const to = session.user ? await homeFor(session.user.id) : "/mon-espace";
