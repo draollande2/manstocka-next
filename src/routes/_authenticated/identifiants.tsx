@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { KeyRound } from "lucide-react";
+import { Eye, KeyRound } from "lucide-react";
 import { PageShell, Panel, EmptyRow } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { logActivity, useCurrentUser } from "@/hooks/useCurrentUser";
-import { listAllAccounts, updateUserCredentials } from "@/lib/accounts.functions";
+import {
+  getUserCredentials,
+  listAllAccounts,
+  updateUserCredentials,
+} from "@/lib/accounts.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/identifiants")({
