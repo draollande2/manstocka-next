@@ -46,6 +46,7 @@ const NAV: NavItem[] = [
   { to: "/entreprises", label: "Entreprises", icon: Building2, superAdminOnly: true },
   { to: "/annonces", label: "Messages défilants", icon: Megaphone, superAdminOnly: true },
   { to: "/facturation", label: "Facturation", icon: CreditCard, superAdminOnly: true },
+  { to: "/identifiants", label: "Identifiants & accès", icon: KeyRound, superAdminOnly: true },
   { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard, adminOnly: true },
 
   { to: "/produits", label: "Produits / Articles", icon: Package },
