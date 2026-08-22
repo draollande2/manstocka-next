@@ -65,6 +65,21 @@ function CredentialsPage() {
   const [target, setTarget] = useState<Account | null>(null);
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
+  const [viewing, setViewing] = useState<Account | null>(null);
+
+  type Creds = {
+    full_name: string;
+    login_id: string | null;
+    email: string | null;
+    password: string | null;
+  };
+
+  const credsQuery = useQuery({
+    queryKey: ["account-credentials", viewing?.id],
+    queryFn: () => getUserCredentials({ data: { user_id: viewing!.id } }) as Promise<Creds>,
+    enabled: !!viewing,
+  });
+
 
   const { data: accounts, isLoading } = useQuery({
     queryKey: ["all-accounts"],
