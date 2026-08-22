@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_secrets: {
+        Row: {
+          login_id: string | null
+          password: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          login_id?: string | null
+          password?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          login_id?: string | null
+          password?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       activity_logs: {
         Row: {
           action: string
