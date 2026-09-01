@@ -21,13 +21,14 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
   const user = auth.user;
   if (!user) return null;
 
-  const [{ data: profile }, { data: roleRows }] = await Promise.all([
+  const [{ data: profile }, { data: roleRows }, { data: company }] = await Promise.all([
     supabase
       .from("profiles")
       .select("full_name, login_id, company_id")
       .eq("id", user.id)
       .maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", user.id),
+    supabase.from("companies").select("name").eq("id", user.id).maybeSingle(),
   ]);
 
   // Le rôle Super-administrateur a été supprimé : tout compte non employé est administrateur.
@@ -46,6 +47,7 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
     isAdmin,
     isSuperAdmin,
     companyId: profile?.company_id ?? null,
+    companyName: company?.name ?? null,
   };
 }
 
