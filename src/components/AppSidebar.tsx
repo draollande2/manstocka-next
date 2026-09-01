@@ -43,7 +43,7 @@ const EMPLOYEE_PAGES = [
   "/comptes",
 ];
 
-const NAV: NavItem[] = [
+export const NAV: NavItem[] = [
   { to: "/entreprises", label: "Entreprises", icon: Building2, superAdminOnly: true },
   { to: "/annonces", label: "Messages défilants", icon: Megaphone, superAdminOnly: true },
   { to: "/facturation", label: "Facturation", icon: CreditCard, superAdminOnly: true },
