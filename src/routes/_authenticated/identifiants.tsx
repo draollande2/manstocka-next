@@ -245,6 +245,60 @@ function CredentialsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Accès actuels de {viewing?.full_name}</DialogTitle>
+            <DialogDescription>
+              Informations de connexion enregistrées pour ce compte.
+            </DialogDescription>
+          </DialogHeader>
+          {credsQuery.isLoading ? (
+            <p className="text-sm text-muted-foreground">Chargement…</p>
+          ) : (
+            <div className="grid gap-3 text-sm">
+              <div className="flex justify-between gap-4 rounded-md border border-border px-3 py-2">
+                <span className="text-muted-foreground">Identifiant</span>
+                <span className="font-mono font-medium">{credsQuery.data?.login_id ?? "—"}</span>
+              </div>
+              <div className="flex justify-between gap-4 rounded-md border border-border px-3 py-2">
+                <span className="text-muted-foreground">E-mail de connexion</span>
+                <span className="font-mono">{credsQuery.data?.email ?? "—"}</span>
+              </div>
+              <div className="flex justify-between gap-4 rounded-md border border-border px-3 py-2">
+                <span className="text-muted-foreground">Mot de passe</span>
+                <span className="font-mono font-medium">
+                  {credsQuery.data?.password ?? "Non enregistré"}
+                </span>
+              </div>
+              {!credsQuery.data?.password && (
+                <p className="text-xs text-muted-foreground">
+                  Les mots de passe existants sont chiffrés et ne peuvent pas être relus. Définissez
+                  un nouveau mot de passe via « Modifier les accès » : il sera affiché ici ensuite.
+                </p>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewing(null)}>
+              Fermer
+            </Button>
+            {viewing && (
+              <Button
+                onClick={() => {
+                  setTarget(viewing);
+                  setLoginId(viewing.login_id ?? "");
+                  setPassword("");
+                  setViewing(null);
+                }}
+              >
+                Modifier
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageShell>
   );
 }
