@@ -13,6 +13,7 @@ export type CurrentUser = {
   isAdmin: boolean;
   isSuperAdmin: boolean;
   companyId: string | null;
+  companyName: string | null;
 };
 
 async function fetchCurrentUser(): Promise<CurrentUser | null> {
@@ -28,6 +29,10 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
       .maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", user.id),
   ]);
+
+  const { data: company } = profile?.company_id
+    ? await supabase.from("companies").select("name").eq("id", profile.company_id).maybeSingle()
+    : { data: null };
 
   // Le rôle Super-administrateur a été supprimé : tout compte non employé est administrateur.
   const raw = (roleRows ?? []).map((r) => String(r.role));
@@ -45,6 +50,7 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
     isAdmin,
     isSuperAdmin,
     companyId: profile?.company_id ?? null,
+    companyName: company?.name ?? null,
   };
 }
 
