@@ -21,15 +21,18 @@ async function fetchCurrentUser(): Promise<CurrentUser | null> {
   const user = auth.user;
   if (!user) return null;
 
-  const [{ data: profile }, { data: roleRows }, { data: company }] = await Promise.all([
+  const [{ data: profile }, { data: roleRows }] = await Promise.all([
     supabase
       .from("profiles")
       .select("full_name, login_id, company_id")
       .eq("id", user.id)
       .maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", user.id),
-    supabase.from("companies").select("name").eq("id", user.id).maybeSingle(),
   ]);
+
+  const { data: company } = profile?.company_id
+    ? await supabase.from("companies").select("name").eq("id", profile.company_id).maybeSingle()
+    : { data: null };
 
   // Le rôle Super-administrateur a été supprimé : tout compte non employé est administrateur.
   const raw = (roleRows ?? []).map((r) => String(r.role));
