@@ -13,6 +13,7 @@ export type CurrentUser = {
   isAdmin: boolean;
   isSuperAdmin: boolean;
   companyId: string | null;
+  companyName: string | null;
 };
 
 async function fetchCurrentUser(): Promise<CurrentUser | null> {
