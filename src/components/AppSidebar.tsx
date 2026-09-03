@@ -36,10 +36,8 @@ type NavItem = { to: string; label: string; icon: typeof Package; adminOnly?: bo
 const EMPLOYEE_PAGES = [
   "/mon-espace",
   "/vente",
-  "/salaires",
   "/manques-pertes",
   "/mouvements",
-  "/epargne",
   "/comptes",
 ];
 
@@ -58,13 +56,13 @@ export const NAV: NavItem[] = [
   { to: "/factures", label: "Factures", icon: FileText },
   { to: "/depenses", label: "Dépenses", icon: Receipt, adminOnly: true },
   { to: "/manques-pertes", label: "Manques & Pertes", icon: AlertTriangle },
-  { to: "/salaires", label: "Salaire", icon: Wallet },
+  { to: "/salaires", label: "Salaire", icon: Wallet, adminOnly: true },
   { to: "/historique", label: "Historique", icon: History, adminOnly: true },
   { to: "/comptes", label: "États des stocks", icon: ClipboardCheck, adminOnly: false },
   { to: "/rapport", label: "Rapport mensuel", icon: BarChart3, adminOnly: true },
   { to: "/parametres", label: "Paramètres", icon: Settings, adminOnly: true },
   { to: "/mon-espace", label: "Mon espace employé", icon: UserCircle },
-  { to: "/epargne", label: "Compte d'épargne", icon: PiggyBank },
+  { to: "/epargne", label: "Compte d'épargne", icon: PiggyBank, adminOnly: true },
   { to: "/abonnement", label: "Abonnement", icon: CreditCard, adminOnly: true },
 ];
 
