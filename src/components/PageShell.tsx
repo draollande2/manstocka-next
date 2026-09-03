@@ -9,7 +9,21 @@ export function useSettings() {
   return useQuery({
     queryKey: ["app-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("app_settings").select("*").eq("id", 1).maybeSingle();
+      // Chaque entreprise possède sa propre fiche de paramètres.
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid) return null;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("company_id")
+        .eq("id", uid)
+        .maybeSingle();
+      if (!profile?.company_id) return null;
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("*")
+        .eq("company_id", profile.company_id)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
