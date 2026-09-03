@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/salaires")({
       { property: "og:description", content: "Préparez, éditez et imprimez les bulletins de salaire du mois." },
     ],
   }),
-  component: SalariesPage,
+  component: SalariesGuard,
 });
 
 type SalaryRow = {
@@ -74,6 +74,25 @@ function emptyForm(period: string): FormState {
     savings_transfer: "0",
     paid: false,
   };
+}
+
+function AdminOnly({ title }: { title: string }) {
+  return (
+    <PageShell title={title} description="Accès réservé à l'administration.">
+      <Panel>
+        <p className="p-6 text-sm text-muted-foreground">
+          Cette page est réservée aux administrateurs de l'entreprise.
+        </p>
+      </Panel>
+    </PageShell>
+  );
+}
+
+function SalariesGuard() {
+  const { data: me, isLoading } = useCurrentUser();
+  if (isLoading) return null;
+  if (!me?.isAdmin) return <AdminOnly title="Salaire" />;
+  return <SalariesPage />;
 }
 
 function SalariesPage() {

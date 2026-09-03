@@ -11,9 +11,9 @@ export const Route = createFileRoute("/_authenticated/mon-espace")({
   head: () => ({
     meta: [
       { title: "Mon espace employé — Stocka" },
-      { name: "description", content: "Tableau de bord personnel : ventes réalisées, retenues, salaire et épargne." },
+      { name: "description", content: "Tableau de bord personnel : ventes réalisées, retenues, activité du mois." },
       { property: "og:title", content: "Mon espace employé — Stocka" },
-      { property: "og:description", content: "Chaque collaborateur suit son activité et son salaire." },
+      { property: "og:description", content: "Chaque collaborateur suit son activité et son activité." },
     ],
   }),
   component: EmployeeSpace,
@@ -37,24 +37,13 @@ function EmployeeSpace() {
         .gte("created_at", start)
         .order("created_at", { ascending: false });
       if (siteId != null) salesRequest = salesRequest.eq("site_id", siteId);
-      const [sales, losses, salary, savings, logs] = await Promise.all([
+      const [sales, losses, logs] = await Promise.all([
         salesRequest,
         supabase
           .from("losses")
           .select("id, kind, amount, description, created_at")
           .eq("employee_id", user?.id ?? "")
           .eq("period", period),
-        supabase
-          .from("salaries")
-          .select("*")
-          .eq("employee_id", user?.id ?? "")
-          .eq("period", period)
-          .maybeSingle(),
-        supabase
-          .from("savings_accounts")
-          .select("balance")
-          .eq("employee_id", user?.id ?? "")
-          .maybeSingle(),
         supabase
           .from("activity_logs")
           .select("id, action, entity, details, created_at")
@@ -65,8 +54,6 @@ function EmployeeSpace() {
       return {
         sales: sales.data ?? [],
         losses: losses.data ?? [],
-        salary: salary.data,
-        savings: savings.data,
         logs: logs.data ?? [],
       };
     },
@@ -74,25 +61,15 @@ function EmployeeSpace() {
 
   const salesTotal = (data?.sales ?? []).reduce((s, r) => s + Number(r.total), 0);
   const lossTotal = (data?.losses ?? []).reduce((s, r) => s + Number(r.amount), 0);
-  const salary = data?.salary;
-  const net = salary
-    ? Number(salary.base_salary) +
-      Number(salary.bonus) -
-      Number(salary.losses_deduction) -
-      Number(salary.other_deduction) -
-      Number(salary.savings_transfer)
-    : 0;
 
   return (
     <PageShell
       title="Mon espace employé"
       description={`Bonjour ${user?.fullName ?? ""} — activité de ${periodLabel(period)}.`}
     >
-      <div className="grid gap-4 sm:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <StatCard label="Mes ventes du mois" value={money(salesTotal)} hint={`${data?.sales.length ?? 0} vente(s)`} />
         <StatCard label="Mes retenues" value={money(lossTotal)} />
-        <StatCard label="Salaire net estimé" value={money(net)} hint={salary?.paid ? "Payé" : "En attente"} />
-        <StatCard label="Mon épargne" value={money(data?.savings?.balance ?? 0)} />
       </div>
 
       <Panel title="Mes ventes du mois">

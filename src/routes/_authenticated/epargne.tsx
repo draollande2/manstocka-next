@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/epargne")({
       { property: "og:description", content: "Chaque collaborateur épargne, l'administrateur valide les retraits." },
     ],
   }),
-  component: SavingsPage,
+  component: SavingsGuard,
 });
 
 type AccountRow = { id: string; employee_id: string; balance: number };
@@ -46,6 +46,22 @@ type TxRow = {
   note: string | null;
   created_at: string;
 };
+
+function SavingsGuard() {
+  const { data: me, isLoading } = useCurrentUser();
+  if (isLoading) return null;
+  if (!me?.isAdmin)
+    return (
+      <PageShell title="Compte d'épargne" description="Accès réservé à l'administration.">
+        <Panel>
+          <p className="p-6 text-sm text-muted-foreground">
+            Cette page est réservée aux administrateurs de l'entreprise.
+          </p>
+        </Panel>
+      </PageShell>
+    );
+  return <SavingsPage />;
+}
 
 function SavingsPage() {
   const { data: user } = useCurrentUser();
