@@ -79,6 +79,17 @@ function emptyForm(period: string): FormState {
 function SalariesPage() {
   const { data: me } = useCurrentUser();
   const isEmployee = me ? !me.isAdmin : false;
+  if (me && !me.isAdmin) {
+    return (
+      <PageShell title="Salaire" description="Accès réservé à l'administration.">
+        <Panel>
+          <p className="p-6 text-sm text-muted-foreground">
+            Cette page est réservée aux administrateurs de l'entreprise.
+          </p>
+        </Panel>
+      </PageShell>
+    );
+  }
   const { siteId } = useSite();
   const queryClient = useQueryClient();
   const [period, setPeriod] = useState(currentPeriod());
