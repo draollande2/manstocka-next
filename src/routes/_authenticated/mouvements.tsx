@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowDownToLine, ArrowUpFromLine } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell, Panel, EmptyRow } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
@@ -154,6 +154,49 @@ function MovementsPage() {
       setForm({ product_id: "", mode: "gros", quantity: "1", unit_price: "0", reason: "" });
       void queryClient.invalidateQueries({ queryKey: ["movements"] });
       void queryClient.invalidateQueries({ queryKey: ["products"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const updateMovement = useMutation({
+    mutationFn: async () => {
+      if (!editRow) throw new Error("Aucun mouvement sélectionné.");
+      const quantity = Number(editForm.quantity);
+      if (!quantity || quantity <= 0) throw new Error("Quantité invalide.");
+      const { error } = await supabase.rpc("update_movement", {
+        _id: editRow.id,
+        _mode: editForm.mode,
+        _quantity: quantity,
+        _unit_price: Number(editForm.unit_price) || 0,
+        _reason: editForm.reason,
+      });
+      if (error) throw error;
+      await logActivity("Correction de mouvement", "mouvements", editRow.products?.name ?? editRow.id);
+    },
+    onSuccess: () => {
+      toast.success("Mouvement modifié.");
+      setEditRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["movements"] });
+      void queryClient.invalidateQueries({ queryKey: ["products"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const deleteMovement = useMutation({
+    mutationFn: async (row: MovementRow) => {
+      const { error } = await supabase.rpc("delete_movement", { _id: row.id });
+      if (error) throw error;
+      await logActivity("Suppression de mouvement", "mouvements", row.products?.name ?? row.id);
+    },
+    onSuccess: () => {
+      toast.success("Mouvement supprimé, stock rétabli.");
+      setRemoveRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["movements"] });
+      void queryClient.invalidateQueries({ queryKey: ["products"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
       void queryClient.invalidateQueries({ queryKey: ["invoices"] });
     },
     onError: (e: Error) => toast.error(e.message),
