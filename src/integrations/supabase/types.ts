@@ -1316,6 +1316,8 @@ export type Database = {
         Args: { _invoice_id: string }
         Returns: undefined
       }
+      delete_movement: { Args: { _id: string }; Returns: undefined }
+      delete_transfer: { Args: { _id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1361,6 +1363,20 @@ export type Database = {
         }
       }
       same_company_user: { Args: { _user_id: string }; Returns: boolean }
+      update_movement: {
+        Args: {
+          _id: string
+          _mode: string
+          _quantity: number
+          _reason: string
+          _unit_price: number
+        }
+        Returns: undefined
+      }
+      update_transfer: {
+        Args: { _id: string; _note: string; _quantity_units: number }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "employe" | "admin" | "superadmin"
