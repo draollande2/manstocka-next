@@ -37,7 +37,7 @@ function EmployeeSpace() {
         .gte("created_at", start)
         .order("created_at", { ascending: false });
       if (siteId != null) salesRequest = salesRequest.eq("site_id", siteId);
-      const [sales, losses, logs] = await Promise.all([
+      const [sales, losses, logs, salary, savingsAccount, savingsTransactions] = await Promise.all([
         salesRequest,
         supabase
           .from("losses")
@@ -50,27 +50,129 @@ function EmployeeSpace() {
           .eq("user_id", user?.id ?? "")
           .order("created_at", { ascending: false })
           .limit(20),
+        supabase
+          .from("salaries")
+          .select("id, period, base_salary, bonus, losses_deduction, other_deduction, savings_transfer, paid")
+          .eq("employee_id", user?.id ?? "")
+          .eq("period", period)
+          .maybeSingle(),
+        supabase
+          .from("savings_accounts")
+          .select("id, balance")
+          .eq("employee_id", user?.id ?? "")
+          .maybeSingle(),
+        supabase
+          .from("savings_transactions")
+          .select("id, kind, amount, source, status, note, created_at")
+          .eq("employee_id", user?.id ?? "")
+          .order("created_at", { ascending: false })
+          .limit(20),
       ]);
       return {
         sales: sales.data ?? [],
         losses: losses.data ?? [],
         logs: logs.data ?? [],
+        salary: salary.data,
+        savingsAccount: savingsAccount.data,
+        savingsTransactions: savingsTransactions.data ?? [],
       };
     },
   });
 
   const salesTotal = (data?.sales ?? []).reduce((s, r) => s + Number(r.total), 0);
   const lossTotal = (data?.losses ?? []).reduce((s, r) => s + Number(r.amount), 0);
+  const salary = data?.salary;
+  const salaryNet = salary
+    ? Number(salary.base_salary) +
+      Number(salary.bonus) -
+      Number(salary.losses_deduction) -
+      Number(salary.other_deduction) -
+      Number(salary.savings_transfer)
+    : 0;
 
   return (
     <PageShell
       title="Mon espace employé"
       description={`Bonjour ${user?.fullName ?? ""} — activité de ${periodLabel(period)}.`}
     >
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Mes ventes du mois" value={money(salesTotal)} hint={`${data?.sales.length ?? 0} vente(s)`} />
         <StatCard label="Mes retenues" value={money(lossTotal)} />
+        <StatCard
+          label="Mon salaire net"
+          value={salary ? money(salaryNet) : "—"}
+          hint={salary ? (salary.paid ? "Payé" : "En attente de paiement") : "Bulletin non préparé"}
+        />
+        <StatCard
+          label="Mon compte d'épargne"
+          value={money(data?.savingsAccount?.balance)}
+          hint="Solde disponible"
+        />
       </div>
+
+      <Panel title={`Mon bulletin de salaire — ${periodLabel(period)}`}>
+        {salary ? (
+          <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+            <div className="bg-card p-4">
+              <p className="text-xs text-muted-foreground">Salaire de base</p>
+              <p className="mt-1 font-semibold num">{money(salary.base_salary)}</p>
+            </div>
+            <div className="bg-card p-4">
+              <p className="text-xs text-muted-foreground">Prime</p>
+              <p className="mt-1 font-semibold num">{money(salary.bonus)}</p>
+            </div>
+            <div className="bg-card p-4">
+              <p className="text-xs text-muted-foreground">Manques et autres retenues</p>
+              <p className="mt-1 font-semibold text-destructive num">
+                − {money(Number(salary.losses_deduction) + Number(salary.other_deduction))}
+              </p>
+            </div>
+            <div className="bg-card p-4">
+              <p className="text-xs text-muted-foreground">Versé à mon épargne</p>
+              <p className="mt-1 font-semibold num">{money(salary.savings_transfer)}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+            Votre bulletin de ce mois n'a pas encore été préparé.
+          </p>
+        )}
+      </Panel>
+
+      <Panel title="Mes dernières opérations d'épargne">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-left text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Opération</th>
+                <th className="px-4 py-2">Source</th>
+                <th className="px-4 py-2">Montant</th>
+                <th className="px-4 py-2">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data?.savingsTransactions ?? []).length === 0 ? (
+                <EmptyRow colSpan={5} label={isLoading ? "Chargement…" : "Aucune opération d'épargne."} />
+              ) : (
+                (data?.savingsTransactions ?? []).map((transaction) => (
+                  <tr key={transaction.id} className="border-t border-border">
+                    <td className="px-4 py-2 text-xs">{dateTime(transaction.created_at)}</td>
+                    <td className="px-4 py-2">{transaction.kind === "depot" ? "Dépôt" : "Retrait"}</td>
+                    <td className="px-4 py-2">{transaction.source === "salaire" ? "Bulletin de salaire" : "Manuel"}</td>
+                    <td className="px-4 py-2 font-medium num">{money(transaction.amount)}</td>
+                    <td className="px-4 py-2">
+                      <Badge variant={transaction.status === "valide" ? "default" : transaction.status === "refuse" ? "destructive" : "secondary"}>
+                        {transaction.status === "valide" ? "Validé" : transaction.status === "refuse" ? "Refusé" : "En attente"}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
 
       <Panel title="Mes ventes du mois">
         <div className="overflow-x-auto">
