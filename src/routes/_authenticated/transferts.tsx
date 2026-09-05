@@ -55,6 +55,9 @@ function TransfersPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [receipt, setReceipt] = useState<TransferRow | null>(null);
+  const [editRow, setEditRow] = useState<TransferRow | null>(null);
+  const [removeRow, setRemoveRow] = useState<TransferRow | null>(null);
+  const [editForm, setEditForm] = useState({ quantity_units: "", note: "" });
   const [form, setForm] = useState({
     from_site: "",
     to_site: "",
