@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRightLeft, Printer } from "lucide-react";
+import { ArrowRightLeft, Printer, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell, Panel, EmptyRow, StatCard, useSettings } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
