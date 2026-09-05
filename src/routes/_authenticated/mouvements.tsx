@@ -68,6 +68,19 @@ function MovementsPage() {
     unit_price: "0",
     reason: "",
   });
+  const [editRow, setEditRow] = useState<MovementRow | null>(null);
+  const [removeRow, setRemoveRow] = useState<MovementRow | null>(null);
+  const [editForm, setEditForm] = useState({ mode: "gros", quantity: "1", unit_price: "0", reason: "" });
+
+  const openEdit = (m: MovementRow) => {
+    setEditForm({
+      mode: m.mode,
+      quantity: String(m.quantity),
+      unit_price: String(m.unit_price),
+      reason: m.reason ?? "",
+    });
+    setEditRow(m);
+  };
 
   const { data: movements, isLoading } = useQuery({
     queryKey: ["movements", isEmployee ? me?.id : "all", siteId ?? "all"],
@@ -265,11 +278,15 @@ function MovementsPage() {
                 <th className="px-4 py-2">Opérateur</th>
                 {allSites && <th className="px-4 py-2">Point de vente</th>}
                 <th className="px-4 py-2">Référence / motif</th>
+                {!isEmployee && <th className="px-4 py-2 text-right" data-print="hide">Actions</th>}
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
-                <EmptyRow colSpan={allSites ? 9 : 8} label={isLoading ? "Chargement…" : "Aucun mouvement enregistré."} />
+                <EmptyRow
+                  colSpan={(allSites ? 9 : 8) + (isEmployee ? 0 : 1)}
+                  label={isLoading ? "Chargement…" : "Aucun mouvement enregistré."}
+                />
               ) : (
                 rows.map((m) => (
                   <tr key={m.id} className="border-t border-border">
@@ -299,6 +316,18 @@ function MovementsPage() {
                       {m.reference && m.reason ? " · " : ""}
                       {m.reason}
                     </td>
+                    {!isEmployee && (
+                      <td className="px-4 py-2 text-right whitespace-nowrap" data-print="hide">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" onClick={() => openEdit(m)}>
+                            <Pencil className="size-4" /> Modifier
+                          </Button>
+                          <Button variant="destructive" size="sm" onClick={() => setRemoveRow(m)}>
+                            <Trash2 className="size-4" /> Supprimer
+                          </Button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}
@@ -431,6 +460,96 @@ function MovementsPage() {
             </Button>
             <Button onClick={() => save.mutate()} disabled={save.isPending}>
               Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(editRow)} onOpenChange={(o) => !o && setEditRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Modifier le mouvement</DialogTitle>
+            <DialogDescription>
+              {editRow?.products?.name ?? "—"} — le stock est recalculé automatiquement après la correction.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="emode">Unité</Label>
+                <select
+                  id="emode"
+                  value={editForm.mode}
+                  onChange={(e) => setEditForm({ ...editForm, mode: e.target.value })}
+                  className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  <option value="gros">En gros ({editRow?.products?.wholesale_unit ?? "colis"})</option>
+                  <option value="detail">En détail ({editRow?.products?.retail_unit ?? "unité"})</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="eq">Quantité</Label>
+                <Input
+                  id="eq"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={editForm.quantity}
+                  onChange={(e) => setEditForm({ ...editForm, quantity: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="eup">Prix unitaire (par unité de détail)</Label>
+              <Input
+                id="eup"
+                type="number"
+                min="0"
+                step="any"
+                value={editForm.unit_price}
+                onChange={(e) => setEditForm({ ...editForm, unit_price: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ereason">Motif</Label>
+              <Input
+                id="ereason"
+                value={editForm.reason}
+                onChange={(e) => setEditForm({ ...editForm, reason: e.target.value })}
+                maxLength={160}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditRow(null)}>
+              Annuler
+            </Button>
+            <Button onClick={() => updateMovement.mutate()} disabled={updateMovement.isPending}>
+              Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(removeRow)} onOpenChange={(o) => !o && setRemoveRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Supprimer ce mouvement ?</DialogTitle>
+            <DialogDescription>
+              {removeRow?.products?.name ?? "—"} — le stock sera remis dans son état d'avant l'opération et le bon
+              associé sera supprimé. Cette action est définitive.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRemoveRow(null)}>
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => removeRow && deleteMovement.mutate(removeRow)}
+              disabled={deleteMovement.isPending}
+            >
+              Supprimer
             </Button>
           </DialogFooter>
         </DialogContent>

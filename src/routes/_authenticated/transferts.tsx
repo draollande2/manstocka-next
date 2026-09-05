@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRightLeft, Printer } from "lucide-react";
+import { ArrowRightLeft, Printer, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageShell, Panel, EmptyRow, StatCard, useSettings } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,9 @@ function TransfersPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [receipt, setReceipt] = useState<TransferRow | null>(null);
+  const [editRow, setEditRow] = useState<TransferRow | null>(null);
+  const [removeRow, setRemoveRow] = useState<TransferRow | null>(null);
+  const [editForm, setEditForm] = useState({ quantity_units: "", note: "" });
   const [form, setForm] = useState({
     from_site: "",
     to_site: "",
@@ -142,6 +145,49 @@ function TransfersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const updateTransfer = useMutation({
+    mutationFn: async () => {
+      if (!editRow) throw new Error("Aucun transfert sélectionné.");
+      const quantity = Number(editForm.quantity_units);
+      if (!quantity || quantity <= 0) throw new Error("Quantité invalide.");
+      const { error } = await supabase.rpc("update_transfer", {
+        _id: editRow.id,
+        _quantity_units: quantity,
+        _note: editForm.note,
+      });
+      if (error) throw error;
+      await logActivity("Correction de transfert", "transferts", editRow.number);
+    },
+    onSuccess: () => {
+      toast.success("Transfert modifié.");
+      setEditRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks-by-site"] });
+      void queryClient.invalidateQueries({ queryKey: ["stocks-for-transfer"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const removeTransfer = useMutation({
+    mutationFn: async (row: TransferRow) => {
+      const { error } = await supabase.rpc("delete_transfer", { _id: row.id });
+      if (error) throw error;
+      await logActivity("Suppression de transfert", "transferts", row.number);
+    },
+    onSuccess: () => {
+      toast.success("Transfert supprimé, stock rétabli.");
+      setRemoveRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks-by-site"] });
+      void queryClient.invalidateQueries({ queryKey: ["stocks-for-transfer"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const rows = transfers ?? [];
   const productName = (id: string) => (products ?? []).find((p) => p.id === id)?.name ?? "Article supprimé";
 
@@ -196,10 +242,25 @@ function TransfersPage() {
                     <td className="px-4 py-2 text-xs">{siteName(t.from_site_id)}</td>
                     <td className="px-4 py-2 text-xs">{siteName(t.to_site_id)}</td>
                     <td className="px-4 py-2 num">{money(Number(t.unit_price) * Number(t.quantity_units))}</td>
-                    <td className="px-4 py-2 text-right" data-print="hide">
-                      <Button variant="outline" size="sm" onClick={() => setReceipt(t)}>
-                        Voir
-                      </Button>
+                    <td className="px-4 py-2 text-right whitespace-nowrap" data-print="hide">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setReceipt(t)}>
+                          Voir
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditForm({ quantity_units: String(t.quantity_units), note: t.note ?? "" });
+                            setEditRow(t);
+                          }}
+                        >
+                          <Pencil className="size-4" /> Modifier
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => setRemoveRow(t)}>
+                          <Trash2 className="size-4" /> Supprimer
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -316,6 +377,71 @@ function TransfersPage() {
             </Button>
             <Button onClick={() => submit.mutate()} disabled={submit.isPending}>
               {submit.isPending ? "Transfert…" : "Valider le transfert"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(editRow)} onOpenChange={(o) => !o && setEditRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Modifier le transfert {editRow?.number}</DialogTitle>
+            <DialogDescription>
+              Le stock des deux points de vente est ajusté automatiquement selon la nouvelle quantité.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="eqt">Quantité</Label>
+              <Input
+                id="eqt"
+                type="number"
+                min="0"
+                step="any"
+                value={editForm.quantity_units}
+                onChange={(e) => setEditForm({ ...editForm, quantity_units: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="enote">Motif</Label>
+              <Input
+                id="enote"
+                value={editForm.note}
+                onChange={(e) => setEditForm({ ...editForm, note: e.target.value })}
+                maxLength={200}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditRow(null)}>
+              Annuler
+            </Button>
+            <Button onClick={() => updateTransfer.mutate()} disabled={updateTransfer.isPending}>
+              Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(removeRow)} onOpenChange={(o) => !o && setRemoveRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Supprimer le transfert {removeRow?.number} ?</DialogTitle>
+            <DialogDescription>
+              Les quantités reviendront au point de départ et le bon de transfert sera supprimé. Cette action est
+              définitive.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRemoveRow(null)}>
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => removeRow && removeTransfer.mutate(removeRow)}
+              disabled={removeTransfer.isPending}
+            >
+              Supprimer
             </Button>
           </DialogFooter>
         </DialogContent>
