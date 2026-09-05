@@ -242,10 +242,25 @@ function TransfersPage() {
                     <td className="px-4 py-2 text-xs">{siteName(t.from_site_id)}</td>
                     <td className="px-4 py-2 text-xs">{siteName(t.to_site_id)}</td>
                     <td className="px-4 py-2 num">{money(Number(t.unit_price) * Number(t.quantity_units))}</td>
-                    <td className="px-4 py-2 text-right" data-print="hide">
-                      <Button variant="outline" size="sm" onClick={() => setReceipt(t)}>
-                        Voir
-                      </Button>
+                    <td className="px-4 py-2 text-right whitespace-nowrap" data-print="hide">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setReceipt(t)}>
+                          Voir
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditForm({ quantity_units: String(t.quantity_units), note: t.note ?? "" });
+                            setEditRow(t);
+                          }}
+                        >
+                          <Pencil className="size-4" /> Modifier
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => setRemoveRow(t)}>
+                          <Trash2 className="size-4" /> Supprimer
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
