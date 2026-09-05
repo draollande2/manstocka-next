@@ -382,6 +382,71 @@ function TransfersPage() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={Boolean(editRow)} onOpenChange={(o) => !o && setEditRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Modifier le transfert {editRow?.number}</DialogTitle>
+            <DialogDescription>
+              Le stock des deux points de vente est ajusté automatiquement selon la nouvelle quantité.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="eqt">Quantité</Label>
+              <Input
+                id="eqt"
+                type="number"
+                min="0"
+                step="any"
+                value={editForm.quantity_units}
+                onChange={(e) => setEditForm({ ...editForm, quantity_units: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="enote">Motif</Label>
+              <Input
+                id="enote"
+                value={editForm.note}
+                onChange={(e) => setEditForm({ ...editForm, note: e.target.value })}
+                maxLength={200}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditRow(null)}>
+              Annuler
+            </Button>
+            <Button onClick={() => updateTransfer.mutate()} disabled={updateTransfer.isPending}>
+              Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(removeRow)} onOpenChange={(o) => !o && setRemoveRow(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Supprimer le transfert {removeRow?.number} ?</DialogTitle>
+            <DialogDescription>
+              Les quantités reviendront au point de départ et le bon de transfert sera supprimé. Cette action est
+              définitive.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRemoveRow(null)}>
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => removeRow && removeTransfer.mutate(removeRow)}
+              disabled={removeTransfer.isPending}
+            >
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <TransferReceipt
         transfer={receipt}
         productName={receipt ? productName(receipt.product_id) : ""}
