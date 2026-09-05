@@ -278,11 +278,15 @@ function MovementsPage() {
                 <th className="px-4 py-2">Opérateur</th>
                 {allSites && <th className="px-4 py-2">Point de vente</th>}
                 <th className="px-4 py-2">Référence / motif</th>
+                {!isEmployee && <th className="px-4 py-2 text-right" data-print="hide">Actions</th>}
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
-                <EmptyRow colSpan={allSites ? 9 : 8} label={isLoading ? "Chargement…" : "Aucun mouvement enregistré."} />
+                <EmptyRow
+                  colSpan={(allSites ? 9 : 8) + (isEmployee ? 0 : 1)}
+                  label={isLoading ? "Chargement…" : "Aucun mouvement enregistré."}
+                />
               ) : (
                 rows.map((m) => (
                   <tr key={m.id} className="border-t border-border">
