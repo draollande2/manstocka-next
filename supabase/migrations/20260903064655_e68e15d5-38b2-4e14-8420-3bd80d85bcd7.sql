@@ -1,0 +1,1 @@
+ALTER TABLE public.app_settings DROP CONSTRAINT IF EXISTS app_settings_id_check;
