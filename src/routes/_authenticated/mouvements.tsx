@@ -68,6 +68,19 @@ function MovementsPage() {
     unit_price: "0",
     reason: "",
   });
+  const [editRow, setEditRow] = useState<MovementRow | null>(null);
+  const [removeRow, setRemoveRow] = useState<MovementRow | null>(null);
+  const [editForm, setEditForm] = useState({ mode: "gros", quantity: "1", unit_price: "0", reason: "" });
+
+  const openEdit = (m: MovementRow) => {
+    setEditForm({
+      mode: m.mode,
+      quantity: String(m.quantity),
+      unit_price: String(m.unit_price),
+      reason: m.reason ?? "",
+    });
+    setEditRow(m);
+  };
 
   const { data: movements, isLoading } = useQuery({
     queryKey: ["movements", isEmployee ? me?.id : "all", siteId ?? "all"],
