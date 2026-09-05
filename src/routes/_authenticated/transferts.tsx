@@ -142,6 +142,49 @@ function TransfersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const updateTransfer = useMutation({
+    mutationFn: async () => {
+      if (!editRow) throw new Error("Aucun transfert sélectionné.");
+      const quantity = Number(editForm.quantity_units);
+      if (!quantity || quantity <= 0) throw new Error("Quantité invalide.");
+      const { error } = await supabase.rpc("update_transfer", {
+        _id: editRow.id,
+        _quantity_units: quantity,
+        _note: editForm.note,
+      });
+      if (error) throw error;
+      await logActivity("Correction de transfert", "transferts", editRow.number);
+    },
+    onSuccess: () => {
+      toast.success("Transfert modifié.");
+      setEditRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks-by-site"] });
+      void queryClient.invalidateQueries({ queryKey: ["stocks-for-transfer"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const removeTransfer = useMutation({
+    mutationFn: async (row: TransferRow) => {
+      const { error } = await supabase.rpc("delete_transfer", { _id: row.id });
+      if (error) throw error;
+      await logActivity("Suppression de transfert", "transferts", row.number);
+    },
+    onSuccess: () => {
+      toast.success("Transfert supprimé, stock rétabli.");
+      setRemoveRow(null);
+      void queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks"] });
+      void queryClient.invalidateQueries({ queryKey: ["product-stocks-by-site"] });
+      void queryClient.invalidateQueries({ queryKey: ["stocks-for-transfer"] });
+      void queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const rows = transfers ?? [];
   const productName = (id: string) => (products ?? []).find((p) => p.id === id)?.name ?? "Article supprimé";
 
